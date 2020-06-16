@@ -58,6 +58,8 @@ end
 function module:bind(eventName, func)
 	if not uiBinds[eventName] then
 		uiBinds[eventName] = {}
+	else
+		warn(("[gcr] Attempted to overwrite bind %s!"):format(eventName))
 	end
 
 	table.insert(uiBinds[eventName], func)
