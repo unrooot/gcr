@@ -16,9 +16,9 @@ local pgui = plr:WaitForChild("PlayerGui")
 
 local uiBinds = {}
 local uiHooks = {}
-local uiButtons = {}
 
 -- local functions
+-- run the components
 local function runComponent(name, parent)
 	local component = components:FindFirstChild(name, true)
 	if component then
@@ -64,10 +64,12 @@ function module:bind(eventName, func)
 end
 
 function module:fire(eventName, ...)
+	-- check if event exists
 	if uiBinds[eventName] then
+		-- fire event
 		local args = {...}
 		for _,v in pairs(uiBinds[eventName]) do
-			local s, err = pcall(f, unpack(arg))
+			local s, err = pcall(v, unpack(args))
 			if not s then
 				error(err)
 			end
@@ -79,7 +81,7 @@ end
 
 function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
 	-- just in case
-	assert(typeof(button) == "TextButton", "[gcr] Attempted to call hookButton on an instance that isn't a TextButton.")
+	assert(button.ClassName == "TextButton", "[gcr] Attempted to call hookButton on an instance that isn't a TextButton.")
 
 	-- check if button has already been hooked
 	if uiHooks[button] then
@@ -91,13 +93,7 @@ function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
 		enterFunction = enterFunction or empty
 		leaveFunction = leaveFunction or empty
 
-		table.insert(uiButtons, {
-			button = button,
-			clickFunction = clickFunction,
-			enterFunction = enterFunction,
-			leaveFunction = leaveFunction
-		})
-
+		-- connect events
 		uiHooks[button] = {
 			button.MouseButton1Click:connect(clickFunction),
 			button.MouseEnter:connect(enterFunction),
