@@ -7,7 +7,7 @@ local rs = game:GetService("ReplicatedStorage")
 
 -- component folder
 local shared = rs:WaitForChild("shared")
-local modules = shared:WaitForChild("modules")
+local modules = shared:WaitForChild("ui")
 local components = modules:WaitForChild("components")
 
 -- initialization
@@ -94,18 +94,18 @@ function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
 			for _,v in pairs(uiHooks[button]) do
 				v:disconnect()
 			end
-
-			-- default if needed
-			enterFunction = enterFunction or empty
-			leaveFunction = leaveFunction or empty
-
-			-- connect events
-			uiHooks[button] = {
-				button.MouseButton1Click:connect(clickFunction),
-				button.MouseEnter:connect(enterFunction),
-				button.MouseLeave:connect(leaveFunction)
-			}
 		end
+
+		-- default if needed
+		enterFunction = enterFunction or empty
+		leaveFunction = leaveFunction or empty
+
+		-- connect events
+		uiHooks[button] = {
+			button.MouseButton1Click:connect(clickFunction),
+			button.MouseEnter:connect(enterFunction),
+			button.MouseLeave:connect(leaveFunction)
+		}
 	else
 		warn("[gcr] Attempted to call hookButton on an instance that isn't a TextButton or ImageButton.")
 	end
