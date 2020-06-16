@@ -82,25 +82,26 @@ function module:fire(eventName, ...)
 end
 
 function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
-	-- just in case
-	assert(button.ClassName == "TextButton", "[gcr] Attempted to call hookButton on an instance that isn't a TextButton.")
+	if button.ClassName == "TextButton" then
+		-- check if button has already been hooked
+		if uiHooks[button] then
+			for _,v in pairs(uiHooks[button]) do
+				v:disconnect()
+			end
 
-	-- check if button has already been hooked
-	if uiHooks[button] then
-		for _,v in pairs(uiHooks[button]) do
-			v:disconnect()
+			-- default if needed
+			enterFunction = enterFunction or empty
+			leaveFunction = leaveFunction or empty
+
+			-- connect events
+			uiHooks[button] = {
+				button.MouseButton1Click:connect(clickFunction),
+				button.MouseEnter:connect(enterFunction),
+				button.MouseLeave:connect(leaveFunction)
+			}
 		end
-
-		-- default if needed
-		enterFunction = enterFunction or empty
-		leaveFunction = leaveFunction or empty
-
-		-- connect events
-		uiHooks[button] = {
-			button.MouseButton1Click:connect(clickFunction),
-			button.MouseEnter:connect(enterFunction),
-			button.MouseLeave:connect(leaveFunction)
-		}
+	else
+		warn("[gcr] Attempted to call hookButton on an instance that isn't a TextButton.")
 	end
 end
 
