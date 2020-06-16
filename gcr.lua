@@ -82,7 +82,7 @@ function module:fire(eventName, ...)
 end
 
 function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
-	if button.ClassName == "TextButton" then
+	if button.ClassName == "TextButton" or button.ClassName == "ImageButton" then
 		-- check if button has already been hooked
 		if uiHooks[button] then
 			for _,v in pairs(uiHooks[button]) do
@@ -101,7 +101,7 @@ function module:hookButton(button, clickFunction, enterFunction, leaveFunction)
 			}
 		end
 	else
-		warn("[gcr] Attempted to call hookButton on an instance that isn't a TextButton.")
+		warn("[gcr] Attempted to call hookButton on an instance that isn't a TextButton or ImageButton.")
 	end
 end
 
