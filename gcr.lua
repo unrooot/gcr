@@ -22,8 +22,14 @@ local uiHooks = {}
 local function runComponent(name, parent)
 	local component = components:FindFirstChild(name, true)
 	if component then
-		if parent then
-			require(component)(parent)
+		if component:IsA("ModuleScript") then
+			if parent then
+				require(component)(parent)
+			else
+				warn(("[gcr] Parent does not exist for component %s?"):format(name))
+			end
+		else
+			warn(("[gcr] Naming conflict! Attempted to require %s %s."):format(component.ClassName, component.Name))
 		end
 	else
 		warn(("[gcr] Component %s does not exist."):format(name))
